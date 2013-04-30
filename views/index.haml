@@ -1,0 +1,16 @@
+!!!
+%html
+	%head
+		%title moneybook
+		%link(rel="stylesheet" href="/css/styles.css")
+	%body
+		%form{ :action=> "/add", :method => "post"}
+			%fieldset
+				%ul
+					%li
+						%input{:type => "text",:name => "where",  :placeholder=>"where"}
+					%li
+						%input{:name => "how much", :placeholder=>"how much"}
+					%li
+						%input{:type => "submit"}
+		
