@@ -15,3 +15,7 @@ Getting Started
 
 Spreadsheet keys are part of the url when you look at the spreadsheet in drive (key parameter).
 	https://docs.google.com/spreadsheet/ccc?key=0AqHWdZFeQl3edFBmajRnUnl6bVZKN0JkYS1xTVNGSFE#gid=0	
+
+TODO
+====
+Summing still needs to be done for each column.
