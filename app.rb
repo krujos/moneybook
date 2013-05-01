@@ -15,13 +15,14 @@ post '/add' do
   where = params[:where]
   cost = params[:cost]
   s = GoogleDrive.login_with_oauth(user_credentials.access_token)
-  ws = session[:drive].spreadsheet_by_key(ENV['SHEET_KEY']).worksheets[0]
+  ws = s.spreadsheet_by_key(ENV['SHEET_KEY']).worksheets[0]
   
+  orig_row = ws.num_rows
   row = ws.num_rows + 1
   ws[row, 1] = where
   ws[row, 2] = cost
- # ws[row, 3] = '=' + ws[ws.num_rows,3] + '-' + ws[row, 2]
-  ws.save()
+  ws[row, 3] = "=C#{row-1}-B#{row}"
+    ws.save()
   redirect "/"
 end
 
