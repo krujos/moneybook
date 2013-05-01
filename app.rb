@@ -7,6 +7,10 @@ enable :sessions
 
 def api_client; settings.api_client; end
 
+DATE = 1
+WHERE = 2
+COST = 3
+SUM = 4
 get '/' do 
   haml :index
 end
@@ -19,9 +23,10 @@ post '/add' do
   
   orig_row = ws.num_rows
   row = ws.num_rows + 1
-  ws[row, 1] = where
-  ws[row, 2] = cost
-  ws[row, 3] = "=C#{row-1}-B#{row}"
+  ws[row, DATE] = Time.new.strftime("%m/%d/%Y") 
+  ws[row, WHERE] = where
+  ws[row, COST] = cost
+  ws[row, SUM] = "=D#{row-1}-C#{row}"
     ws.save()
   redirect "/"
 end
