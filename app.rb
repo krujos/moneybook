@@ -57,10 +57,7 @@ configure do
   client.authorization.client_secret = ENV['CLIENT_SECRET']
   client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
 
-  #calendar = client.discovered_api('calendar', 'v3')
-
   set :api_client, client
-  #set :calendar, calendar
 end
 
 get '/oauth2authorize' do
