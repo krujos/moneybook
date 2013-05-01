@@ -3,3 +3,9 @@ ul {
 	list-style-type: none;
 	margin: 0px;
 }
+
+body{
+	-webkit-text-size-adjust:none;
+    font-family:Helvetica, Arial, Verdana, sans-serif;
+	padding:5px;
+}

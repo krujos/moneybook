@@ -58,7 +58,7 @@ def user_credentials
 end
 
 configure do
-  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01)
+  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline")
   client.authorization.client_id = ENV['CLIENT_ID']
   client.authorization.client_secret = ENV['CLIENT_SECRET']
   client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
