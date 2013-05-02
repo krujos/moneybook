@@ -5,12 +5,11 @@
 		%link(rel="stylesheet" href="/css/styles.css")
 	%body
 		%form{ :action=> "/add", :method => "post"}
-			%fieldset
-				%ul
-					%li
-						%input{:type => "text",:name => "where",  :placeholder=>"where"}
-					%li
-						%input{:type => "number", :step => "any", :name => "cost", :placeholder=>"cost"}
-					%li
-						%input{:type => "submit"}
+			%ul
+				%li
+					%input{:type => "text",:name => "where", :placeholder=>"where"}
+				%li
+					%input{:type => "number", :step => "any", :name => "cost", :placeholder=>"cost"}
+				%li
+					%input{:type => "submit"}
 		
