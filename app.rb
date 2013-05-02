@@ -7,20 +7,29 @@ enable :sessions
 
 def api_client; settings.api_client; end
 
+helpers do 
+  def get_sheet
+    s = GoogleDrive.login_with_oauth(user_credentials.access_token)
+    s.spreadsheet_by_key(ENV['SHEET_KEY']).worksheets[0]
+  end
+end
+
 DATE = 1
 WHERE = 2
 COST = 3
 SUM = 4
 get '/' do 
-  haml :index
+  ws = get_sheet
+  balance = ws[ws.num_rows, SUM]
+  balance['$'] = ''
+  haml :index, :locals => { :balance => balance.to_f.round(2) }
 end
 
 post '/add' do 
   where = params[:where]
   cost = params[:cost]
-  s = GoogleDrive.login_with_oauth(user_credentials.access_token)
-  ws = s.spreadsheet_by_key(ENV['SHEET_KEY']).worksheets[0]
-  
+ 
+  ws = get_sheet
   orig_row = ws.num_rows
   row = ws.num_rows + 1
   ws[row, DATE] = Time.new.strftime("%m/%d/%Y") 
@@ -31,6 +40,7 @@ post '/add' do
   redirect "/"
 end
 
+####### Cred code #######
 before do
   # Ensure user has authorized the app
   unless user_credentials.access_token || request.path_info =~ /^\/oauth2/
