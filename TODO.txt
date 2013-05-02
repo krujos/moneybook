@@ -1,4 +1,0 @@
-Investigate proper spreadsheet gem's. Both look promising.
-    https://github.com/gimite/google-drive-ruby
-	https://github.com/firmafon/to_google_spreadsheet
-	
