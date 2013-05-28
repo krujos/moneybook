@@ -7,6 +7,15 @@ enable :sessions
 
 def api_client; settings.api_client; end
 
+configure do
+  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline")
+  client.authorization.client_id = ENV['CLIENT_ID']
+  client.authorization.client_secret = ENV['CLIENT_SECRET']
+  client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
+
+  set :api_client, client
+end
+
 helpers do 
   def get_sheet
     s = GoogleDrive.login_with_oauth(user_credentials.access_token)
@@ -43,7 +52,7 @@ end
 ####### Cred code #######
 before do
   # Ensure user has authorized the app
-  unless user_credentials.access_token || request.path_info =~ /^\/oauth2/
+  unless user_credentials.access_token || request.path_info =~ /^\/oauth2/ || user_credentials.refresh_token
     redirect to('/oauth2authorize')
   end
 end
@@ -67,16 +76,10 @@ def user_credentials
   )
 end
 
-configure do
-  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline")
-  client.authorization.client_id = ENV['CLIENT_ID']
-  client.authorization.client_secret = ENV['CLIENT_SECRET']
-  client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
-
-  set :api_client, client
-end
-
 get '/oauth2authorize' do
+  if session[:refresh_token]
+    
+  end
   # Request authorization
   redirect user_credentials.authorization_uri.to_s, 303
 end
