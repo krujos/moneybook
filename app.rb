@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'dotenv'
 require 'google/api_client'
-require 'pp'
 Dotenv.load
 
 #enable :sessions
