@@ -1,9 +1,14 @@
 require 'sinatra'
 require 'dotenv'
 require 'google/api_client'
+require 'pp'
 Dotenv.load
 
-enable :sessions
+#enable :sessions
+use Rack::Session::Cookie, :key => 'rack.session',
+                           :path => '/',
+                           :expire_after => 31536000, 
+                           :secret => ENV['SHEET_KEY']
 
 def api_client; settings.api_client; end
 
@@ -45,7 +50,7 @@ post '/add' do
   ws[row, WHERE] = where
   ws[row, COST] = cost
   ws[row, SUM] = "=D#{row-1}-C#{row}"
-    ws.save()
+  ws.save()
   redirect "/"
 end
 
@@ -77,9 +82,6 @@ def user_credentials
 end
 
 get '/oauth2authorize' do
-  if session[:refresh_token]
-    
-  end
   # Request authorization
   redirect user_credentials.authorization_uri.to_s, 303
 end
