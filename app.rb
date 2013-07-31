@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'dotenv'
 require 'google/api_client'
-require 'pp'
 Dotenv.load
 
 #enable :sessions
@@ -73,8 +72,6 @@ after do
   session[:refresh_token] = user_credentials.refresh_token
   session[:expires_in] = user_credentials.expires_in
   session[:issued_at] = user_credentials.issued_at
-  
-  pp session
 end
 
 def user_credentials
