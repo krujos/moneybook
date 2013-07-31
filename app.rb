@@ -57,9 +57,9 @@ end
 ####### Cred code #######
 before do
   # Ensure user has authorized the app
-  if session[:expires_at] && Time.now > session[:expires_at]
-    puts "Must refresh cred!"
+  if session[:expires_at] && Time.now > session[:expires_at] 
     user_credentials.fetch_access_token!
+    session[:expires_at] = Time.now + user_credentials.expires_in
   end
   
   unless user_credentials.access_token || request.path_info =~ /^\/oauth2/ 
