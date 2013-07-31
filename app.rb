@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'dotenv'
 require 'google/api_client'
+require 'pp'
 Dotenv.load
 
 #enable :sessions
@@ -12,7 +13,7 @@ use Rack::Session::Cookie, :key => 'rack.session',
 def api_client; settings.api_client; end
 
 configure do
-  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline")
+  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline", :auto_refresh => true)
   client.authorization.client_id = ENV['CLIENT_ID']
   client.authorization.client_secret = ENV['CLIENT_SECRET']
   client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
@@ -56,7 +57,12 @@ end
 ####### Cred code #######
 before do
   # Ensure user has authorized the app
-  unless user_credentials.access_token || request.path_info =~ /^\/oauth2/ || user_credentials.refresh_token
+  if session[:expires_at] && Time.now > session[:expires_at]
+    puts "Must refresh cred!"
+    user_credentials.fetch_access_token!
+  end
+  
+  unless user_credentials.access_token || request.path_info =~ /^\/oauth2/ 
     redirect to('/oauth2authorize')
   end
 end
@@ -67,6 +73,8 @@ after do
   session[:refresh_token] = user_credentials.refresh_token
   session[:expires_in] = user_credentials.expires_in
   session[:issued_at] = user_credentials.issued_at
+  
+  pp session
 end
 
 def user_credentials
@@ -89,5 +97,6 @@ get '/oauth2callback' do
   # Exchange token
   user_credentials.code = params[:code] if params[:code]
   user_credentials.fetch_access_token!
+  session[:expires_at] = Time.now + user_credentials.expires_in
   redirect to('/')
 end
