@@ -17,3 +17,5 @@ tmp
 _yardoc
 doc/
 .env
+.idea
+client_secrets.json

@@ -7,7 +7,6 @@ GEM
       extlib (>= 0.9.15)
       multi_json (>= 1.0.0)
     daemons (1.1.9)
-    dotenv (0.7.0)
     eventmachine (1.0.3)
     extlib (0.9.16)
     faraday (0.8.7)
@@ -68,7 +67,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dotenv
   google-api-client
   google_drive
   haml

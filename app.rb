@@ -1,7 +1,8 @@
 require 'sinatra'
-require 'dotenv'
 require 'google/api_client'
-Dotenv.load
+require 'google/api_client/auth/installed_app'
+require 'google/api_client/client_secrets'
+
 
 #enable :sessions
 use Rack::Session::Cookie, :key => 'rack.session',
@@ -12,10 +13,10 @@ use Rack::Session::Cookie, :key => 'rack.session',
 def api_client; settings.api_client; end
 
 configure do
-  client = Google::APIClient.new(:application_name => "moneybook", :application_version => 0.01, :access_type => "offline", :auto_refresh => true)
-  client.authorization.client_id = ENV['CLIENT_ID']
-  client.authorization.client_secret = ENV['CLIENT_SECRET']
-  client.authorization.scope = 'https://docs.google.com/feeds/ ' + "https://docs.googleusercontent.com/ "  + "https://spreadsheets.google.com/feeds/"
+  client = Google::APIClient.new(:application_name => 'moneybook', :application_version => 1.0, :access_type => 'offline', :auto_refresh => true)
+  secrets = Google::APIClient::ClientSecrets.load
+  client.authorization = secrets.to_authorization
+  client.authorization.scope = %w(https://docs.google.com/feeds/ https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/)
 
   set :api_client, client
 end
@@ -43,14 +44,13 @@ post '/add' do
   cost = params[:cost]
  
   ws = get_sheet
-  orig_row = ws.num_rows
   row = ws.num_rows + 1
-  ws[row, DATE] = Time.new.strftime("%m/%d/%Y") 
+  ws[row, DATE] = Time.new.strftime('%m/%d/%Y')
   ws[row, WHERE] = where
   ws[row, COST] = cost
   ws[row, SUM] = "=D#{row-1}-C#{row}"
   ws.save()
-  redirect "/"
+  redirect '/'
 end
 
 ####### Cred code #######
